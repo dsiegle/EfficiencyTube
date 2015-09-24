@@ -1,0 +1,49 @@
+// This is a comment.  Should ignore everything to the EOL.
+name: John Q. Pubic
+company: UberTech Inc.
+position: Chief Bottle Washer
+
+// This is an interval 
+interval: break
+	description: Your basic hour meeting
+	probability: 30
+	time: 60
+	variability: 5
+	max_times: 2
+	day_regions: 2 4
+	quotes:		// This can have multiple rows and will only be completed when a new 'keyword' is found.
+		I have to go to a code review...
+		The CEO wants to see me about a promotion!
+		Wish I didn't have a meeting.  Your so lucky!
+		Sexual harassment training. Again.
+		
+interval: work
+	description: You basic work interval
+	time: 30
+	variability: 10
+	probability: 80
+	day_regions: 1 2 3 4 5
+	quotes:
+		I hate TPS reports.
+		Work work work.  It's all I do.
+		Is that you?  Did you shower today?
+		
+interval: work
+	description: A shorter work interval
+	time: 15
+	variability: 3
+	probability: 80
+	day_regions: 1 2 3 4 5
+	quotes:
+		Working short and sweet!
+		I'm building a habit.
+		This bug is kicking my ass.
+		
+w: 10
+b: 4
+w: 15
+b: 6
+w: 10
+b: 4
+w: 15
+b: 5

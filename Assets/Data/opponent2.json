@@ -1,0 +1,62 @@
+{
+	"name" : "John Q. Public"
+	"company" : "UberTech Inc."
+	"title" : "Chief Bottle Washer"
+	"photo" : "/path/to/photo.jpg",
+	 "file_metrics_dont_edit_these" : 
+		{
+		"work_length_in_hours": 4.0,
+		"total_amount_worked" : 3.0,
+		"efficiency" : 75.0,
+		"number_work_events" : 5,
+		"number_break_events" : 8,
+		"number_bubble_events" : 5,
+		"number_regions" : 5
+		}
+	"workEvent" :
+		[
+			{
+				"length_in_secs" : 5,
+				"post_it_text": "Work #1",
+				"speech_bubble": "Getting started now."
+			},
+			{
+				"length_in_secs" : 5,
+				"post_it_text" : "Work #2"
+				"speech_bubble": "Starting up again."
+			}
+			{
+				"length_in_secs" : 5,
+				"post_it_text" : "Work #3"
+				"speech_bubble": "Let's do this."
+			}
+			{
+				"length_in_secs" : 5,
+				"post_it_text" : "Work #4"
+				"speech_bubble": "Last work block."
+			}
+		]
+	"breakEvent" :
+		[
+			{
+				"length_in_secs" : 4,
+				"post_it_text" : "Break #1"
+				"speech_bubble": "Have to go potty."
+			},
+			{
+				"length_in_secs" : 4,
+				"post_it_text" : "Break #2"
+				"speech_bubble": "Going to walk around."
+			},
+			{
+				"length_in_secs" : 4,
+				"post_it_text" : "Break #3"
+				"speech_bubble": "Let's jog!"
+			},
+			{
+				"length_in_secs" : 4,
+				"post_it_text" : "Done for the day"
+				"speech_bubble": "I'm done for today!"
+			}
+		]
+}

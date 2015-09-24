@@ -2,7 +2,10 @@
 using UnityEngine.UI;
 using System.Collections;
 using System;
+using System.IO;
 using System.Collections.Generic;
+//using SimpleJSON;
+using Procurios.Public;
 
 
 public class OpponentScript : MonoBehaviour {
@@ -10,7 +13,11 @@ public class OpponentScript : MonoBehaviour {
 	public static OpponentScript opponentScript;
 	
 	// These are the external GameObjects we update via this script.
+	public Text op_name;
+	public Text op_company;
+	public Text op_position;
 	public Text op_sessionTime;
+	public Text op_quote;
 	public Text op_numSes;
 	public Text op_avgSes;
 	public Text op_numBreaks; 	// Display the number of breaks
@@ -18,22 +25,28 @@ public class OpponentScript : MonoBehaviour {
 	public Text op_breakTime;	// Display length of current break
 	public Text op_totalTime;
 	public Image op_postItNote;
+	public Text op_postItNoteText;
 	private TimeCalculationScript to;
 
-	int currentBlock = 0;		// The number of blocks our opponent has completed
-	DateTime prevTime;	// When the currently running block started
+	Hashtable _op;			// Contains the opponent information from the JSON file.
+	int _curIndex =  0;		// Current index into opponents work/break blocks
+	int _numWorkBlocks = 0;	// Number of work blocks in the opponents day
+	bool _working = true;	// Indicates if opponent is working or on break.
+
+	DateTime _prevTime;		// When the currently running block started
+	DateTime _blockEndTime;	// When the currently running block will end
 
 	private Vector3 v = new Vector3 (0, -400, 0);	// Post it note position
 
-	class OpTimeBlock {
-		public OpTimeBlock(char t, TimeSpan ts, DateTime dt) { this.tag = t; this.span = ts; this.dt = dt; }
-		public TimeSpan span;
-		public char tag; // Either 'w' or 'b'
-		public DateTime dt;
-	}
+//	class OpWorkTimeBlock {
+//		public OpWorkTimeBlock(string t, TimeSpan ts, DateTime dt) {this.span = ts; this.dt = dt;}
+//		public TimeSpan span;
+//		public DateTime dt;
+//	}
 
 	// Our opponent uses one list for both work blocks and rest blocks
-	List<OpTimeBlock> blocks = new List<OpTimeBlock>();
+//	List<OpWorkTimeBlock> m_workBlocks = new List<OpWorkTimeBlock>();
+//	List<OpBreakTimeBlock> m_breakBlocks = new List<OpWorkTimeBlock>();
 
 	//------------------------------------------------------------
 	void Awake() {
@@ -55,43 +68,32 @@ public class OpponentScript : MonoBehaviour {
 		to = TimeCalculationScript.tcs;	// Get our static time information
 		
 		// Get all of the GameObjects we will be updating
+		op_name = GameObject.Find ("OP_Name").GetComponent<Text>();
+		op_position = GameObject.Find ("OP_Position").GetComponent<Text>();
+		op_company = GameObject.Find ("OP_Company").GetComponent<Text>();
 		op_sessionTime = GameObject.Find ("OP_SessionTime").GetComponent<Text>();
+		op_quote = GameObject.Find ("OP_Quote").GetComponent<Text>();
 		op_numSes = GameObject.Find ("OP_NumSes").GetComponent<Text>();
 		op_avgSes = GameObject.Find ("OP_AvgSes").GetComponent<Text>();
 		op_numBreaks = GameObject.Find ("OP_NumBreaks").GetComponent<Text>();
 		op_avgBreak = GameObject.Find ("OP_AvgBreak").GetComponent<Text>();
 		op_breakTime = GameObject.Find ("OP_BreakTime").GetComponent<Text>();
 		op_postItNote = GameObject.Find ("OP_PostItNote").GetComponent<Image> ();
+		op_postItNoteText = GameObject.Find ("OP_PostItNoteText").GetComponent<Text> ();
 		op_totalTime = GameObject.Find ("OP_TotalTime").GetComponent<Text> ();
 
-		// Put a couple of works and breaks into our blocks
-		//blocks.Add (new OpTimeBlock('w',new TimeSpan(0,0,0), new DateTime()));
-		blocks.Add (new OpTimeBlock('w',new TimeSpan(0,10,0), new DateTime()));
-		blocks.Add (new OpTimeBlock('b',new TimeSpan(0,5,0), new DateTime()));
-		blocks.Add (new OpTimeBlock('w',new TimeSpan(0,15,0), new DateTime()));
-		blocks.Add (new OpTimeBlock('b',new TimeSpan(0,5,0), new DateTime()));
-		blocks.Add (new OpTimeBlock('w',new TimeSpan(0,25,0), new DateTime()));
-		blocks.Add (new OpTimeBlock('b',new TimeSpan(0,10,0), new DateTime()));
-		blocks.Add (new OpTimeBlock('w',new TimeSpan(0,30,0), new DateTime()));
-		blocks.Add (new OpTimeBlock('b',new TimeSpan(0,10,0), new DateTime()));
-		blocks.Add (new OpTimeBlock('w',new TimeSpan(0,25,0), new DateTime()));
-		blocks.Add (new OpTimeBlock('b',new TimeSpan(0,10,0), new DateTime()));
-		blocks.Add (new OpTimeBlock('w',new TimeSpan(0,40,0), new DateTime()));
-		blocks.Add (new OpTimeBlock('b',new TimeSpan(0,15,0), new DateTime()));
-		blocks.Add (new OpTimeBlock('w',new TimeSpan(0,10,0), new DateTime()));
-		blocks.Add (new OpTimeBlock('b',new TimeSpan(0,5,0), new DateTime()));
-		blocks.Add (new OpTimeBlock('w',new TimeSpan(0,35,0), new DateTime()));
-		blocks.Add (new OpTimeBlock('b',new TimeSpan(0,15,0), new DateTime()));
-		Debug.Log ("blocks.Count = " + blocks.Count);
-		// Fill out our ending times based off of the actual start time.
-		DateTime baseTime = to.startTime;
-		foreach (OpTimeBlock b in blocks) {
-			b.dt = baseTime + b.span;	// Compute actual DateTime from the span
-			baseTime = b.dt;
-			//Debug.Log("b.dt = " + b.dt + "baseTime = " + baseTime + "b.span = " + b.span);
-		}
-		prevTime = to.currentTime;  // Initialize for the first time Update() is called.
-		Debug.Log ("prevTime = " + prevTime);
+		string fname = ".\\Assets\\Data\\opponent2.json";
+
+		StreamReader sr = new StreamReader (fname);
+		string json = sr.ReadToEnd();
+		_op = (Hashtable)JSON.JsonDecode(json);
+
+		_numWorkBlocks = ((ArrayList)_op["workEvent"]).Count;
+		_prevTime = to.currentTime;
+
+		// Initialize the end time for the first work block.
+		_blockEndTime = SetBlockEndTime ((ArrayList)_op["workEvent"], to.currentTime);
+
 	}
 
 	//------------------------------------------------------------
@@ -101,41 +103,82 @@ public class OpponentScript : MonoBehaviour {
 		} else {
 			v.x = -650;
 		}
-		op_postItNote.transform.position = v; // Move post it note into or out of view
+		op_postItNote.transform.position = v; // Move post-it note into or out of view
 	}
 
+	//------------------------------------------------------------
+	void UpdatePostItNote(ArrayList list, DateTime now)
+	{
+		Hashtable table = (Hashtable)(list[_curIndex]);
+		string s = (string)table ["post_it_text"];
+
+		TimeSpan bs = now - _prevTime;
+		op_breakTime.text = string.Format ("Break Time: {0:d2}:{1:d2}:{2:d2}", bs.Hours, bs.Minutes, bs.Seconds);
+		op_numBreaks.text = string.Format ("#Breaks: {0:d2}", _curIndex+1);
+		op_postItNoteText.text = s;
+		ShowPostIt(true);
+	}
+	
+	//------------------------------------------------------------
+	void UpdateBizCard(ArrayList list, DateTime now)
+	{
+		Hashtable table = (Hashtable)(list[_curIndex]);
+		string s = (string)table ["post_it_text"];
+		TimeSpan ws = now - _prevTime;
+
+		op_sessionTime.text = string.Format ("Ses. Time: {0:d2}:{1:d2}:{2:d2}", ws.Hours, ws.Minutes, ws.Seconds);
+		op_numSes.text = string.Format ("#Ses.: {0:d2}", _curIndex+1);
+		op_quote.text = s;
+		ShowPostIt(false);
+
+//		UpdateSessionAverage();
+//		UpdateQuote();
+//		TriggerSpeechBubble();		
+	}
+	//------------------------------------------------------------
+	void DisplayFinalMetrics()
+	{
+		ShowPostIt(true);
+		op_breakTime.text = string.Format ("I'm out of here!");
+	}
+
+	//------------------------------------------------------------
+	DateTime SetBlockEndTime(ArrayList list, DateTime now)
+	{
+		Hashtable table = (Hashtable)(list[_curIndex]);
+		double secs = (double) table["length_in_secs"];
+		TimeSpan ts = new TimeSpan(0,0,(int)secs);
+		return to.currentTime + ts;
+	}
+	
 	//------------------------------------------------------------
 	// Update is called once per frame
 	void Update () {
 
-		// This is where we will keep track of the opponents time
-		// Our opponent is still work/breaking
+		DateTime now = to.currentTime;
 
-		if (currentBlock < blocks.Count) {
-			OpTimeBlock ob = blocks[currentBlock];
-
-			if (ob.tag == 'w') {
-				//Debug.Log(" work cb = " + currentBlock);
-				TimeSpan ws = to.currentTime - prevTime;
-				op_sessionTime.text = string.Format ("Ses. Time: {0:d2}:{1:d2}:{2:d2}", ws.Hours, ws.Minutes, ws.Seconds);
-				ShowPostIt(false);
-
-			}
-			else if (ob.tag == 'b') {
-				//Debug.Log(" break cb = " + currentBlock);
-				TimeSpan bs = to.currentTime - prevTime;
-				op_breakTime.text = string.Format ("Break Time: {0:d2}:{1:d2}:{2:d2}", bs.Hours, bs.Minutes, bs.Seconds);
-				ShowPostIt(true);
-
-			}
-			if (to.currentTime > ob.dt) {
-				currentBlock += 1;	// Move to next block
-				prevTime = to.currentTime;
+		if (_curIndex < _numWorkBlocks) {
+			if (_working) {
+				UpdateBizCard ((ArrayList)_op ["workEvent"], now);
+			} else {
+				UpdatePostItNote ((ArrayList)_op ["breakEvent"], now);
 			}
 
-		} else {  	// Opponent is done for the day
-			ShowPostIt(true);
-			op_breakTime.text = string.Format ("I'm out of here!");
+			if (now > _blockEndTime) {
+				if (_working) {		// Switching to a "break"
+					_prevTime = now;						// Initialize next start time
+					_working = false;
+					_blockEndTime = SetBlockEndTime ((ArrayList)_op ["breakEvent"], now);	// Set time when next block will end
+				} else {		// Switching to "work"
+					_curIndex += 1;		// Move to next work/break block ONLY when the break is done.
+					_prevTime = now;
+					_working = true;
+					if (_curIndex < _numWorkBlocks)
+						_blockEndTime = SetBlockEndTime ((ArrayList)_op ["workEvent"], now);
+				}
+			}
+		} else {
+			DisplayFinalMetrics ();	// When opponent is done for the day.	
 		}
 	}
 }

@@ -1,0 +1,9 @@
+F:\Dropbox\Dropbox\DANCODE\DAN_APPS\SilentWinter\TestProjects\FileReadingTests\bin\Debug\genWorkDay.exe.config
+F:\Dropbox\Dropbox\DANCODE\DAN_APPS\SilentWinter\TestProjects\FileReadingTests\bin\Debug\genWorkDay.exe
+F:\Dropbox\Dropbox\DANCODE\DAN_APPS\SilentWinter\TestProjects\FileReadingTests\bin\Debug\genWorkDay.pdb
+F:\Dropbox\Dropbox\DANCODE\DAN_APPS\SilentWinter\TestProjects\FileReadingTests\obj\Debug\genWorkDay.exe
+F:\Dropbox\Dropbox\DANCODE\DAN_APPS\SilentWinter\TestProjects\FileReadingTests\obj\Debug\genWorkDay.pdb
+C:\Users\Dan\Dropbox\DANCODE\DAN_APPS\SilentWinter\TestProjects\FileReadingTests\bin\Debug\genWorkDay.exe.config
+C:\Users\Dan\Dropbox\DANCODE\DAN_APPS\SilentWinter\TestProjects\FileReadingTests\obj\Debug\genWorkDay.exe
+C:\Users\Dan\Dropbox\DANCODE\DAN_APPS\SilentWinter\TestProjects\FileReadingTests\obj\Debug\genWorkDay.pdb
+F:\Dropbox\Dropbox\DANCODE\DAN_APPS\SilentWinter\TestProjects\FileReadingTests\obj\Debug\FileReadingTests.csprojResolveAssemblyReference.cache
