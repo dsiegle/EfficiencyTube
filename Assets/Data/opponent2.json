@@ -55,8 +55,8 @@
 			},
 			{
 				"length_in_secs" : 4,
-				"post_it_text" : "Done for the day"
-				"speech_bubble": "I'm done for today!"
+				"post_it_text" : "Last break!"
+				"speech_bubble": "Almost done!"
 			}
 		]
 }

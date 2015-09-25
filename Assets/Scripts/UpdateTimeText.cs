@@ -14,6 +14,7 @@ public class UpdateTimeText : MonoBehaviour {
 	private Text tgtFinishTime;
 	private Text tgtWorkRemaining;
 	private Slider targetEfficiencySlider;
+	private Text tgtAvg;
 
 	private TimeCalculationScript to;	// external 'singleton' with all our time calculations
 
@@ -26,6 +27,7 @@ public class UpdateTimeText : MonoBehaviour {
 		timeText = GameObject.Find ("TimeText").GetComponent<Text>();
 		tgtFinishTime = GameObject.Find ("TgtFinishTime").GetComponent<Text> ();
 		tgtWorkRemaining = GameObject.Find ("TgtWorkRemaining").GetComponent<Text> ();
+		tgtAvg = GameObject.Find ("TgtAvg").GetComponent<Text> ();
 
 		to = TimeCalculationScript.tcs;
 	}
@@ -43,6 +45,12 @@ public class UpdateTimeText : MonoBehaviour {
 		TimeSpan ts = new TimeSpan(0,0,0,(int)(workRemainingInSecs));
 		DateTime tgt = to.currentTime + ts;
 		tgtFinishTime.text = tgt.ToString ("hh:mmtt");
+
+		// Update what the average will be if we work until the target times current value.
+		float nsessions = (float)(PlayerScript.playerScript.sessions.Count+1);
+		float avgsec = (to.runSec + workRemainingInSecs) / nsessions;
+		ts = new TimeSpan(0,0,0,(int)avgsec);
+		tgtAvg.text = string.Format ("Avg: {0:d2}:{1:d2}:{2:d2}", ts.Hours, ts.Minutes, ts.Seconds);
 
 	}
 }

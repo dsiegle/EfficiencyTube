@@ -21,9 +21,10 @@ public class OpponentScript : MonoBehaviour {
 	public Text op_numSes;
 	public Text op_avgSes;
 	public Text op_numBreaks; 	// Display the number of breaks
-	public Text op_avgBreak;	// Display average time of all breaks
+	public Text op_backIn;		// Time until opponent returns
 	public Text op_breakTime;	// Display length of current break
-	public Text op_totalTime;
+	public Text op_postItTotal;
+	public Text op_bizTotal;
 	public Image op_postItNote;
 	public Text op_postItNoteText;
 	private TimeCalculationScript to;
@@ -33,21 +34,17 @@ public class OpponentScript : MonoBehaviour {
 	int _numWorkBlocks = 0;	// Number of work blocks in the opponents day
 	bool _working = true;	// Indicates if opponent is working or on break.
 
+	TimeSpan _workTotal;	// Total time worked
+	TimeSpan _prevWorkTotal;
+
+	TimeSpan _breakTotal;	// Time on break for this block
+	TimeSpan _prevBreakTotal;
+
 	DateTime _prevTime;		// When the currently running block started
 	DateTime _blockEndTime;	// When the currently running block will end
 
-	private Vector3 v = new Vector3 (0, -400, 0);	// Post it note position
-
-//	class OpWorkTimeBlock {
-//		public OpWorkTimeBlock(string t, TimeSpan ts, DateTime dt) {this.span = ts; this.dt = dt;}
-//		public TimeSpan span;
-//		public DateTime dt;
-//	}
-
-	// Our opponent uses one list for both work blocks and rest blocks
-//	List<OpWorkTimeBlock> m_workBlocks = new List<OpWorkTimeBlock>();
-//	List<OpBreakTimeBlock> m_breakBlocks = new List<OpWorkTimeBlock>();
-
+	private Vector3 v = new Vector3 (-180, -375, 0);	// Post it note position
+	
 	//------------------------------------------------------------
 	void Awake() {
 		//Debug.Log ("OS.Awake() called");
@@ -76,11 +73,12 @@ public class OpponentScript : MonoBehaviour {
 		op_numSes = GameObject.Find ("OP_NumSes").GetComponent<Text>();
 		op_avgSes = GameObject.Find ("OP_AvgSes").GetComponent<Text>();
 		op_numBreaks = GameObject.Find ("OP_NumBreaks").GetComponent<Text>();
-		op_avgBreak = GameObject.Find ("OP_AvgBreak").GetComponent<Text>();
+		op_backIn = GameObject.Find ("OP_BackIn").GetComponent<Text>();
 		op_breakTime = GameObject.Find ("OP_BreakTime").GetComponent<Text>();
 		op_postItNote = GameObject.Find ("OP_PostItNote").GetComponent<Image> ();
 		op_postItNoteText = GameObject.Find ("OP_PostItNoteText").GetComponent<Text> ();
-		op_totalTime = GameObject.Find ("OP_TotalTime").GetComponent<Text> ();
+		op_postItTotal = GameObject.Find ("OP_PostItTotal").GetComponent<Text> ();
+		op_bizTotal = GameObject.Find ("OP_BizTotal").GetComponent<Text> ();
 
 		string fname = ".\\Assets\\Data\\opponent2.json";
 
@@ -90,6 +88,10 @@ public class OpponentScript : MonoBehaviour {
 
 		_numWorkBlocks = ((ArrayList)_op["workEvent"]).Count;
 		_prevTime = to.currentTime;
+		_workTotal = new TimeSpan (0, 0, 0);
+		_prevWorkTotal = new TimeSpan (0, 0, 0);
+		_breakTotal = new TimeSpan (0, 0, 0);
+		_prevBreakTotal = new TimeSpan (0, 0, 0);
 
 		// Initialize the end time for the first work block.
 		_blockEndTime = SetBlockEndTime ((ArrayList)_op["workEvent"], to.currentTime);
@@ -99,9 +101,9 @@ public class OpponentScript : MonoBehaviour {
 	//------------------------------------------------------------
 	void ShowPostIt(bool value) {
 		if (value == true) {
-			v.x = -150;
+			v.y = -170;
 		} else {
-			v.x = -650;
+			v.y = -375;
 		}
 		op_postItNote.transform.position = v; // Move post-it note into or out of view
 	}
@@ -113,8 +115,13 @@ public class OpponentScript : MonoBehaviour {
 		string s = (string)table ["post_it_text"];
 
 		TimeSpan bs = now - _prevTime;
-		op_breakTime.text = string.Format ("Break Time: {0:d2}:{1:d2}:{2:d2}", bs.Hours, bs.Minutes, bs.Seconds);
+		_breakTotal = (now - _prevTime) + _prevBreakTotal;	// current block + previous blocks
+
+		TimeSpan break_over = _blockEndTime - now;
+		op_breakTime.text = string.Format ("Break Time: {0:d2}:{1:d2}", bs.Minutes, bs.Seconds);
 		op_numBreaks.text = string.Format ("#Breaks: {0:d2}", _curIndex+1);
+		op_backIn.text = string.Format ("Back in: {0:d2}:{1:d2}", break_over.Minutes, break_over.Seconds);
+		op_postItTotal.text = string.Format ("Total: {0:d2}:{1:d2}:{2:d2}", _breakTotal.Hours, _breakTotal.Minutes, _breakTotal.Seconds);
 		op_postItNoteText.text = s;
 		ShowPostIt(true);
 	}
@@ -124,17 +131,21 @@ public class OpponentScript : MonoBehaviour {
 	{
 		Hashtable table = (Hashtable)(list[_curIndex]);
 		string s = (string)table ["post_it_text"];
+
 		TimeSpan ws = now - _prevTime;
+		_workTotal = (now - _prevTime) + _prevWorkTotal;	// current block + previous blocks
+
+		double avgSes = _workTotal.TotalSeconds / (_curIndex+1);
+		TimeSpan ts = new TimeSpan (0, 0, (int)avgSes);
 
 		op_sessionTime.text = string.Format ("Ses. Time: {0:d2}:{1:d2}:{2:d2}", ws.Hours, ws.Minutes, ws.Seconds);
 		op_numSes.text = string.Format ("#Ses.: {0:d2}", _curIndex+1);
+		op_avgSes.text = string.Format ("Avg./Ses: {0:d2}:{1:d2}:{2:d2}", ts.Hours, ts.Minutes, ts.Seconds);
+		op_bizTotal.text = string.Format ("Total Time: {0:d2}:{1:d2}:{2:d2}", _workTotal.Hours, _workTotal.Minutes, _workTotal.Seconds);
 		op_quote.text = s;
 		ShowPostIt(false);
-
-//		UpdateSessionAverage();
-//		UpdateQuote();
-//		TriggerSpeechBubble();		
 	}
+
 	//------------------------------------------------------------
 	void DisplayFinalMetrics()
 	{
@@ -167,11 +178,13 @@ public class OpponentScript : MonoBehaviour {
 			if (now > _blockEndTime) {
 				if (_working) {		// Switching to a "break"
 					_prevTime = now;						// Initialize next start time
+					_prevWorkTotal = _workTotal;
 					_working = false;
 					_blockEndTime = SetBlockEndTime ((ArrayList)_op ["breakEvent"], now);	// Set time when next block will end
 				} else {		// Switching to "work"
 					_curIndex += 1;		// Move to next work/break block ONLY when the break is done.
 					_prevTime = now;
+					_prevBreakTotal = _breakTotal;
 					_working = true;
 					if (_curIndex < _numWorkBlocks)
 						_blockEndTime = SetBlockEndTime ((ArrayList)_op ["workEvent"], now);

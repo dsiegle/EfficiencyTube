@@ -9,6 +9,8 @@ using System.Collections.Generic;
 public class PlayerScript : MonoBehaviour {
 
 	public static PlayerScript playerScript;
+	private PostItScript pis;
+	//public Image postItNote;
 
 	// These are the external GameObjects we update via this script.
 	public Text sessionTime;
@@ -20,9 +22,7 @@ public class PlayerScript : MonoBehaviour {
 	public Text totalTime;
 
 	int numberOfBreaks = 0;
-
-	public Image postItNote;
-
+	
 	// Our lists of sessions and breaks (which are simply TimeSpans)
 	public List<TimeSpan> sessions = new List<TimeSpan>();
 	public List<TimeSpan> breaks = new List<TimeSpan>();
@@ -51,7 +51,8 @@ public class PlayerScript : MonoBehaviour {
 	//------------------------------------------------------------
 	void Start() {
 		to = TimeCalculationScript.tcs;	// Get our static time information
-		
+		pis = PostItScript.pis;	// Get our static PostItScript object
+
 		// Get all of the GameObjects we will be updating
 		sessionTime = GameObject.Find ("SessionTime").GetComponent<Text>();
 		numSes = GameObject.Find ("NumSes").GetComponent<Text>();
@@ -59,7 +60,6 @@ public class PlayerScript : MonoBehaviour {
 		numBreaks = GameObject.Find ("NumBreaks").GetComponent<Text>();
 		avgBreak = GameObject.Find ("AvgBreak").GetComponent<Text>();
 		breakTime = GameObject.Find ("BreakTime").GetComponent<Text>();
-		postItNote = GameObject.Find ("PostItNote").GetComponent<Image> ();
 		totalTime = GameObject.Find ("TotalTime").GetComponent<Text> ();
 
 		// Initialize this immediately because Update() updates the sessionTime string and requires this as input.
@@ -68,8 +68,6 @@ public class PlayerScript : MonoBehaviour {
 		// Initialize this since startSession() isn't called until the first time the user clicks for a break.
 		numSes.text = string.Format ("Session #: {0:d2}", sessions.Count+1);
 
-		Vector3 v = new Vector3 (1000, 0, 0);
-		postItNote.transform.position += v;
 
 	}
 
@@ -88,9 +86,7 @@ public class PlayerScript : MonoBehaviour {
 			totalBreakTime += breakTS;
 		}
 
-		Vector3 v = new Vector3 (1000, 0, 0);
-		postItNote.transform.position += v; // Move it out of the way
-
+		pis.ShowPostIt (false);
 	}
 
 	//------------------------------------------------------------
@@ -107,10 +103,9 @@ public class PlayerScript : MonoBehaviour {
 		// Set the start of break time.
 		startBreakDT = System.DateTime.Now;
 
-		Vector3 v = new Vector3 (-1000, 0, 0);
-		postItNote.transform.position += v; // Move it into view
+		pis.ShowPostIt (true);
 	}
-
+	
 	//------------------------------------------------------------
 	void Update() {
 		DateTime now = System.DateTime.Now;
@@ -125,7 +120,7 @@ public class PlayerScript : MonoBehaviour {
 			// We update the session averages every frame.
 			float avg = to.runSec / (sessions.Count + 1);
 			TimeSpan ts = new TimeSpan (0, 0, (int)(avg));
-			avgSes.text = string.Format ("Avg/Ses.: {0:d2}:{1:d2}", ts.Minutes, ts.Seconds);
+			avgSes.text = string.Format ("Avg/Ses.: {0:d2}:{1:d2}:{2:d2}", ts.Hours, ts.Minutes, ts.Seconds);
 
 		} else {	// The app is NOT running
 			// In here is where we dynamically update the break information.

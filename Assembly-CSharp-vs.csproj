@@ -58,6 +58,7 @@
      <Compile Include="Assets\Scripts\PositionFutureBox.cs" />
      <Compile Include="Assets\Scripts\PositionMaxBox.cs" />
      <Compile Include="Assets\Scripts\PositionMinBox.cs" />
+     <Compile Include="Assets\Scripts\PostItScript.cs" />
      <Compile Include="Assets\Scripts\TargetTimePanelScript2.cs" />
      <Compile Include="Assets\Scripts\TimeCalculationScript.cs" />
      <Compile Include="Assets\Scripts\UpdateTimeText.cs" />
