@@ -1,4 +1,0 @@
-LoadPersonalityFile(): fname = foo
-name: Alice B. Jones
-company: Pear Compu Corp
-position: Lead Programmer
