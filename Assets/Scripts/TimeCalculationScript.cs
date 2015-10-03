@@ -16,19 +16,18 @@ public class TimeCalculationScript : MonoBehaviour {
 	public DateTime endTime;			// When our workday ends
 	public DateTime endOverTime;		// Time to hit 100% in overtime
 	public DateTime endTgtTime;			// Time when our Tgt marker will be hit
-	//public DateTime midDay;				// Time until middle of the day
-	//public float secToMidday;
+
 	public float secSinceStartup;
 	public float secToEOD;				// # Seconds until the workday is over
 	public float secToEOOT;				// Seconds until end of overtime
-	public float secToTgt;				// # Seconds until we hit our Tgt percentage
 
 	public bool running = false;		// true when app is running
 	public bool started = false;		// true when app started
 
-	private TimeSpan workHoursSpan;		// TESTING TimeSpan object
-	public float workHours;			// length of workday in hours
-	public float workDayLengthInSec;
+	public float workLengthSec;
+	public TimeSpan workSpan;			// length of workday in hours
+	public TimeSpan runSpan;			// How long we've been running
+
 	public float runSec;
 	private Text startButtonText;
 
@@ -80,33 +79,31 @@ public class TimeCalculationScript : MonoBehaviour {
 
 	//------------------------------------------------------------------------------------------
 	// Gets called when the opening level "start work" button is pressed.
-	public void InitializeAndRun(float sliderTime)
+	public void InitializeAndRun(TimeSpan sliderTime)
 	{
 		Debug.Log ("TCS:InitializeAndRun() called");
-		workHours = sliderTime;
+		workSpan = sliderTime;
 		startTime = System.DateTime.Now;
 
 		// The "Start Work!" button has been clicked and we are measuring.
 		started = true;
 		running = true;
 		runSec = 0;
-		
-		workDayLengthInSec = workHours * 3600;
-		workHoursSpan = new TimeSpan (0, (int)workHours, 0, 0);
-		endTime = startTime + workHoursSpan;
+		runSpan = new TimeSpan (0, 0, 0);
+
+		workLengthSec = (float)workSpan.TotalSeconds;	// constant after startup
+		endTime = startTime + workSpan;
 		endOverTime = endTime;
 
-		//TimeSpan tgtSpan = new TimeSpan (0, (int)(workHours * efficiency), 0, 0);
-		//endTgtTime = startTime + tgtSpan;
-		
 		secSinceStartup = 0;
-		secToEOD = workDayLengthInSec - secSinceStartup;
+		secToEOD = (int)(workSpan.TotalSeconds - secSinceStartup);
 	}
 	
 	//------------------------------------------------------------------------------------------
 	// This keeps all the time values for the app updated.
 	void Update ()
 	{
+		//Debug.Log ("TCS.Update() called");
 		if (!started) {
 			return;
 		}
@@ -115,17 +112,17 @@ public class TimeCalculationScript : MonoBehaviour {
 		currentTime = System.DateTime.Now;
 		if (running) {
 			runSec = (runSec + Time.deltaTime);
+			runSpan = new TimeSpan(0,0,(int)runSec);
 		}
 		secSinceStartup += Time.deltaTime;
-		//Debug.Log ("secSinceStartup = " + secSinceStartup);
-		secToEOD = workDayLengthInSec - secSinceStartup;
-		secToEOOT = workDayLengthInSec - runSec;
+		secToEOD = (int)(workSpan.TotalSeconds - secSinceStartup);
+		secToEOOT = workLengthSec - runSec;
+		//Debug.Log ("workLengthSec = " + workLengthSec);
+		//Debug.Log ("secToEOOT = " + secToEOOT + "secToEOD = " + secToEOD);
 
 		if (!running) {
-			TimeSpan ts = new TimeSpan (0, 0, 0, (int)(secToEOOT));
+			TimeSpan ts = new TimeSpan (0, 0, (int)secToEOOT);
 			endOverTime = currentTime + ts;
-			//TimeSpan ts2 = new TimeSpan (0, 0, 0, (int)(secToMidday));
-			//midDay = currentTime + (ts2);
 		}
 	}
 }

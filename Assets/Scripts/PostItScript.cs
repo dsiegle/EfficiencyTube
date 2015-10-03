@@ -7,9 +7,13 @@ public class PostItScript : MonoBehaviour {
 	public static PostItScript pis;
 
 	public Image postItNote;
-	private Vector3 v = new Vector3 (206, -361, 0);	// Post it note position
+	public Button op_postItNote;
 
-	bool _show = false;
+	private Vector3 vPlayer = new Vector3 (206, -361, 0);		// Players Post it note hidden position
+	private Vector3 vOpponent = new Vector3 (-111, -393, 0);	// Opponents Post it note hidden position
+
+	bool _showPlayer = false;
+	bool _showOpponent = false;
 
 	void Awake() {
 		Debug.Log ("PostItScript.Awake() called.");
@@ -29,23 +33,42 @@ public class PostItScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		postItNote = GameObject.Find ("PostItNote").GetComponent<Image> ();
+		op_postItNote = GameObject.Find ("OP_PostItNote").GetComponent<Button> ();
 	}
 
 	//------------------------------------------------------------
-	public void ButtonClicked() {
-		Debug.Log ("PostItScript: ButtonClicked() called\n");
-		_show = (_show ? false : true);	// toggle flag each click
-		ShowPostIt (_show);
+	public void PlayerPostItClicked() {
+		Debug.Log ("PlayerPostItClicked():");
+		_showPlayer = (_showPlayer ? false : true);	// toggle flag each click
+		ShowPostIt (_showPlayer);
+	}
+
+	//------------------------------------------------------------
+	public void OpponentPostItClicked() {
+		_showOpponent = (_showOpponent ? false : true);	// toggle flag each click
+		ShowOpponentPostIt (_showOpponent);
+		Debug.Log ("OpponentPostItClicked(): _showOpponent = " + _showOpponent);
 	}
 
 	//------------------------------------------------------------
 	public void ShowPostIt(bool value) {
 		if (value == true) {
-			v.y = -170;
+			vPlayer.y = -170;
 		} else {
-			v.y = -362;
+			vPlayer.y = -361;
 		}
-		postItNote.transform.position = v; // Move post-it note into or out of view
+		postItNote.transform.position = vPlayer; // Move post-it note into or out of view
+		_showPlayer = value;
+	}
+	//------------------------------------------------------------
+	public void ShowOpponentPostIt(bool value) {
+		if (value == true) {
+			vOpponent.y = -195;
+		} else {
+			vOpponent.y = -393;
+		}
+		op_postItNote.transform.position = vOpponent; // Move post-it note into or out of view
+		_showOpponent = value;
 	}
 
 	//------------------------------------------------------------

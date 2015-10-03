@@ -40,7 +40,7 @@ public class WorkBarScript : MonoBehaviour {
 
 		// Position and scale the green work area (scale it so that it's 8 hours long).
 		//distToTopOfWorkArea = guiMaxY - (secDelta * to.AppStartTime ());
-		//overtimeoffset = distToTopOfWorkArea - (secDelta * to.workDayLengthInSec);
+		//overtimeoffset = distToTopOfWorkArea - (secDelta * to.workSpan.TotalSeconds);
 		//workZone.transform.localPosition = new Vector3 (0, distToTopOfWorkArea, 0);
 		//workZone.transform.localScale = new Vector3(1,to.workHours,1);
 		//Debug.Log ("scale is " + to.workHours);

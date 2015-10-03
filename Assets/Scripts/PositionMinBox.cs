@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+// Attached to the "AvgMixBox" gameobject
+// Only positions it on the efficiency slider
+
 public class PositionMinBox : MonoBehaviour {
 
 	public float guiMinY;

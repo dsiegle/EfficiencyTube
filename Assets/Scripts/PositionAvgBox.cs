@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PositionAvgBox : MonoBehaviour {
+// Attached to the "AvgBox" gameobject
+// Only positions it on the efficiency slider
 
+public class PositionAvgBox : MonoBehaviour {
 	public float guiMinY;
 	//public float guiMaxY;
 	public float guiDelta;

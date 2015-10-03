@@ -1,17 +1,39 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System;
 
+// This script is attached to the Efficiency Slider.
+// It updates the 3 text objects that are children of the slider.
 public class PositionFutureBox : MonoBehaviour {
 
 	public Slider slider;
 
 	private ComputeAverages ca;
 	private TimeCalculationScript to;
+	
+
+	private Text tgtAvg;
 
 	//private int prevEfficiency = 0;
 	private bool playedUp = false;
 	private bool playedDown = false;
+
+
+
+	//------------------------------------------------------------------------------------------
+	// Use this for initialization
+	void Start ()
+	{
+		to = TimeCalculationScript.tcs;		// Get the global static tcs
+		
+		slider = GetComponent<Slider> ();
+
+		tgtAvg = GameObject.Find ("TgtAvg").GetComponent<Text> ();
+
+		ca = GameObject.Find ("AvgComputer").GetComponent<ComputeAverages> ();
+		//Debug.Log ("ca.efficiency = " + ca.efficiency + " slider.value = " + slider.value);
+	}
 
 	//------------------------------------------------------------------------------------------
 	public void SliderChanged()
@@ -19,19 +41,8 @@ public class PositionFutureBox : MonoBehaviour {
 		// Reset the target audio triggers
 		playedUp = false;
 		playedDown = false;
+		
 	}
-
-	//------------------------------------------------------------------------------------------
-	// Use this for initialization
-	void Start ()
-	{
-		//Debug.Log ("PositionFutureBox.Start() called");
-		to = TimeCalculationScript.tcs;
-		ca = GameObject.Find ("AvgComputer").GetComponent<ComputeAverages> ();
-		slider = GameObject.Find ("TargetEfficiencySlider").GetComponent<Slider> ();
-		//Debug.Log ("ca.efficiency = " + ca.efficiency + " slider.value = " + slider.value);
-	}
-	
 	// Update is called once per frame
 	//------------------------------------------------------------------------------------------
 	void Update ()
@@ -60,6 +71,13 @@ public class PositionFutureBox : MonoBehaviour {
 			}
 			
 		}
+
+		// Update what the average will be if we work until the target times current value.
+		float nsessions = (float)(PlayerScript.playerScript.sessions.Count+1);
+		float avgsec = (to.runSec + (float)to.workSpan.TotalSeconds) / nsessions;
+		TimeSpan ts = new TimeSpan(0,0,(int)avgsec);
+		tgtAvg.text = string.Format ("Avg: {0:d2}:{1:d2}:{2:d2}", ts.Hours, ts.Minutes, ts.Seconds);	
+
 
 	}
 }

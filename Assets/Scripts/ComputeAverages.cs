@@ -3,6 +3,9 @@ using UnityEngine.UI;
 using System.Collections;
 using System;
 
+// Attached to the "AvgComputer" GameObject, which is the parent of the 3 efficiency slider items
+// (AvgText, MinText, and MaxText).
+// This script only fills in the text values for these 3 boxes.
 public class ComputeAverages : MonoBehaviour {
 	
 	public Text avgText;
@@ -30,6 +33,10 @@ public class ComputeAverages : MonoBehaviour {
 		minText = GameObject.Find ("MinText").GetComponent<Text>();
 		maxText = GameObject.Find ("MaxText").GetComponent<Text>();
 
+		efficiency = 0.0f;
+		maxEfficiency = 0.0f;
+		minEfficiency = 0.0f;
+
 		to = TimeCalculationScript.tcs;
 	}
 	
@@ -46,8 +53,8 @@ public class ComputeAverages : MonoBehaviour {
 
 		if (seod >= 0) {	// In the normal part of the day
 			efficiency = (rt) / sss * 100;
-			maxEfficiency = ((rt + seod) / to.workDayLengthInSec) * 100;
-			minEfficiency = (rt / to.workDayLengthInSec) * 100;
+			maxEfficiency = ((rt + seod) / to.workLengthSec) * 100;
+			minEfficiency = (rt / to.workLengthSec) * 100;
 		} 
 		else // Past the end of the normal day, i.e. into overtime.
 		{	

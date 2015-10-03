@@ -11,7 +11,8 @@ using Procurios.Public;
 public class OpponentScript : MonoBehaviour {
 
 	public static OpponentScript opponentScript;
-	
+	private PostItScript pis;
+
 	// These are the external GameObjects we update via this script.
 	public Text op_name;
 	public Text op_company;
@@ -28,11 +29,13 @@ public class OpponentScript : MonoBehaviour {
 	public Image op_postItNote;
 	public Text op_postItNoteText;
 	private TimeCalculationScript to;
+	private Image bizCardBackground;
 
 	Hashtable _op;			// Contains the opponent information from the JSON file.
 	int _curIndex =  0;		// Current index into opponents work/break blocks
 	int _numWorkBlocks = 0;	// Number of work blocks in the opponents day
 	bool _working = true;	// Indicates if opponent is working or on break.
+	bool _doneForDay = false;
 
 	TimeSpan _workTotal;	// Total time worked
 	TimeSpan _prevWorkTotal;
@@ -42,8 +45,6 @@ public class OpponentScript : MonoBehaviour {
 
 	DateTime _prevTime;		// When the currently running block started
 	DateTime _blockEndTime;	// When the currently running block will end
-
-	private Vector3 v = new Vector3 (-180, -375, 0);	// Post it note position
 	
 	//------------------------------------------------------------
 	void Awake() {
@@ -63,7 +64,8 @@ public class OpponentScript : MonoBehaviour {
 	void Start () {
 		Debug.Log ("OS.Start() called");
 		to = TimeCalculationScript.tcs;	// Get our static time information
-		
+		pis = PostItScript.pis;	// Get our static PostItScript object
+
 		// Get all of the GameObjects we will be updating
 		op_name = GameObject.Find ("OP_Name").GetComponent<Text>();
 		op_position = GameObject.Find ("OP_Position").GetComponent<Text>();
@@ -78,12 +80,12 @@ public class OpponentScript : MonoBehaviour {
 		op_postItNote = GameObject.Find ("OP_PostItNote").GetComponent<Image> ();
 		op_postItNoteText = GameObject.Find ("OP_PostItNoteText").GetComponent<Text> ();
 		op_postItTotal = GameObject.Find ("OP_PostItTotal").GetComponent<Text> ();
-		op_bizTotal = GameObject.Find ("OP_BizTotal").GetComponent<Text> ();
 
-		string fname = ".\\Assets\\Data\\opponent2.json";
+		string fname = ".\\Assets\\Data\\opponent3.json";
 
 		StreamReader sr = new StreamReader (fname);
 		string json = sr.ReadToEnd();
+		Debug.Log ("json = " + json);
 		_op = (Hashtable)JSON.JsonDecode(json);
 
 		_numWorkBlocks = ((ArrayList)_op["workEvent"]).Count;
@@ -99,13 +101,14 @@ public class OpponentScript : MonoBehaviour {
 	}
 
 	//------------------------------------------------------------
-	void ShowPostIt(bool value) {
-		if (value == true) {
-			v.y = -170;
-		} else {
-			v.y = -375;
-		}
-		op_postItNote.transform.position = v; // Move post-it note into or out of view
+	public float GetTimeWorkedSoFar()
+	{
+		return (float)_workTotal.TotalSeconds;
+	}
+	//------------------------------------------------------------
+	public bool IsWorking()
+	{
+		return _working;
 	}
 
 	//------------------------------------------------------------
@@ -123,9 +126,8 @@ public class OpponentScript : MonoBehaviour {
 		op_backIn.text = string.Format ("Back in: {0:d2}:{1:d2}", break_over.Minutes, break_over.Seconds);
 		op_postItTotal.text = string.Format ("Total: {0:d2}:{1:d2}:{2:d2}", _breakTotal.Hours, _breakTotal.Minutes, _breakTotal.Seconds);
 		op_postItNoteText.text = s;
-		ShowPostIt(true);
 	}
-	
+
 	//------------------------------------------------------------
 	void UpdateBizCard(ArrayList list, DateTime now)
 	{
@@ -141,15 +143,19 @@ public class OpponentScript : MonoBehaviour {
 		op_sessionTime.text = string.Format ("Ses. Time: {0:d2}:{1:d2}:{2:d2}", ws.Hours, ws.Minutes, ws.Seconds);
 		op_numSes.text = string.Format ("#Ses.: {0:d2}", _curIndex+1);
 		op_avgSes.text = string.Format ("Avg./Ses: {0:d2}:{1:d2}:{2:d2}", ts.Hours, ts.Minutes, ts.Seconds);
-		op_bizTotal.text = string.Format ("Total Time: {0:d2}:{1:d2}:{2:d2}", _workTotal.Hours, _workTotal.Minutes, _workTotal.Seconds);
 		op_quote.text = s;
-		ShowPostIt(false);
 	}
+
+//	//------------------------------------------------------------
+//	void UpdateSpeechBubbleText(ArrayList list) {
+//		string s = (string)((Hashtable)(list[_curIndex])) ["post_it_text"];
+//		return s;
+//	}
 
 	//------------------------------------------------------------
 	void DisplayFinalMetrics()
 	{
-		ShowPostIt(true);
+		pis.ShowOpponentPostIt(true);
 		op_breakTime.text = string.Format ("I'm out of here!");
 	}
 
@@ -166,11 +172,15 @@ public class OpponentScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+		if (_doneForDay) return;	// Skip the whole dang thing.	
+
 		DateTime now = to.currentTime;
 
 		if (_curIndex < _numWorkBlocks) {
 			if (_working) {
 				UpdateBizCard ((ArrayList)_op ["workEvent"], now);
+				TimeSpan ts = _blockEndTime - now;
+				op_breakTime.text = string.Format ("Next Break: {0:d2}:{1:d2}:{2:d2}", ts.Hours,ts.Minutes,ts.Seconds);;
 			} else {
 				UpdatePostItNote ((ArrayList)_op ["breakEvent"], now);
 			}
@@ -181,17 +191,24 @@ public class OpponentScript : MonoBehaviour {
 					_prevWorkTotal = _workTotal;
 					_working = false;
 					_blockEndTime = SetBlockEndTime ((ArrayList)_op ["breakEvent"], now);	// Set time when next block will end
+					//UpdateSpeechBubbleText((ArrayList)_op ["breakEvent"]);
+					pis.ShowOpponentPostIt(true);
 				} else {		// Switching to "work"
 					_curIndex += 1;		// Move to next work/break block ONLY when the break is done.
 					_prevTime = now;
 					_prevBreakTotal = _breakTotal;
 					_working = true;
-					if (_curIndex < _numWorkBlocks)
+					if (_curIndex < _numWorkBlocks) {
 						_blockEndTime = SetBlockEndTime ((ArrayList)_op ["workEvent"], now);
+						//UpdateSpeechBubbleText((ArrayList)_op ["workEvent"]);
+					}
+					pis.ShowOpponentPostIt(false);
 				}
 			}
 		} else {
-			DisplayFinalMetrics ();	// When opponent is done for the day.	
+			DisplayFinalMetrics ();	// When opponent is done for the day.
+			_working = false;
+			_doneForDay = true;
 		}
 	}
 }

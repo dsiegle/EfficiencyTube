@@ -34,8 +34,8 @@ public class AnimateWaterScript : MonoBehaviour {
 
 		//transform.localScale = new Vector3 (90, 90, 90);
 		// Set the y-direction scale to be full when we hit 100% of our run time.
-		//if (to.runSec / to.workDayLengthInSec > 0.03) {
-			//yscale = 10 + (to.runSec / to.workDayLengthInSec * 90);
+		//if (to.runSec / to.workSpan.TotalSeconds > 0.03) {
+			//yscale = 10 + (to.runSec / to.workSpan.TotalSeconds * 90);
 			//transform.localScale = new Vector3(90,90,90);
 
 		//}
