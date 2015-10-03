@@ -46,25 +46,38 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\OpenResultsLevel.cs" />
      <Compile Include="Assets\Scripts\AnimateWaterScript.cs" />
      <Compile Include="Assets\Scripts\ButtonStartStopScript.cs" />
      <Compile Include="Assets\Scripts\ComputeAverages.cs" />
      <Compile Include="Assets\Scripts\DataSerializerScript.cs" />
+     <Compile Include="Assets\Scripts\GlobalCameraScript.cs" />
+     <Compile Include="Assets\Scripts\HMToEODScript.cs" />
      <Compile Include="Assets\Scripts\JSON.cs" />
+     <Compile Include="Assets\Scripts\OPAnimateWaterScript.cs" />
+     <Compile Include="Assets\Scripts\OPTimeTextScript.cs" />
+     <Compile Include="Assets\Scripts\OPWaterFillScript.cs" />
+     <Compile Include="Assets\Scripts\OpenResultsLevel.cs" />
      <Compile Include="Assets\Scripts\OpponentScript.cs" />
      <Compile Include="Assets\Scripts\PlayerScript.cs" />
      <Compile Include="Assets\Scripts\PositionAvgBox.cs" />
      <Compile Include="Assets\Scripts\PositionFutureBox.cs" />
      <Compile Include="Assets\Scripts\PositionMaxBox.cs" />
      <Compile Include="Assets\Scripts\PositionMinBox.cs" />
+     <Compile Include="Assets\Scripts\PositionTimeTextScript.cs" />
      <Compile Include="Assets\Scripts\PostItScript.cs" />
+     <Compile Include="Assets\Scripts\SortingOrderScript.cs" />
      <Compile Include="Assets\Scripts\TargetTimePanelScript2.cs" />
+     <Compile Include="Assets\Scripts\TgtAvgScript.cs" />
+     <Compile Include="Assets\Scripts\TgtFinishTimeScript.cs" />
+     <Compile Include="Assets\Scripts\TgtHMScript.cs" />
      <Compile Include="Assets\Scripts\TimeCalculationScript.cs" />
-     <Compile Include="Assets\Scripts\UpdateTimeText.cs" />
+     <Compile Include="Assets\Scripts\TimeEODScript.cs" />
+     <Compile Include="Assets\Scripts\TimeRunEODScript.cs" />
+     <Compile Include="Assets\Scripts\TimeTextScript.cs" />
+     <Compile Include="Assets\Scripts\UpdateStartTime.cs" />
      <Compile Include="Assets\Scripts\WaterFillScript.cs" />
+     <Compile Include="Assets\Scripts\WaterPipeAnimation.cs" />
      <Compile Include="Assets\Scripts\WorkBarScript.cs" />
-     <Compile Include="Assets\UpdateStartTime.cs" />
      <None Include="Assets\Data\opponent_config.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>F:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
