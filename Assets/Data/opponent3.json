@@ -1,0 +1,123 @@
+{
+	"name" : "John Q. Public"
+	"company" : "UberTech Inc."
+	"title" : "Chief Bottle Washer"
+	"photo" : "/path/to/photo.jpg",
+	 "file_metrics_dont_edit_these" : 
+		{
+		"work_length_in_hours": 4.0,
+		"total_amount_worked" : 3.0,
+		"efficiency" : 75.0,
+		"number_work_events" : 5,
+		"number_break_events" : 8,
+		"number_bubble_events" : 5,
+		"number_regions" : 5
+		}
+	"workEvent" :
+		[
+			{
+				"length_in_secs" : 300,
+				"post_it_text": "Working for 5",
+				"speech_bubble": "Block1"
+			},
+			{
+				"length_in_secs" : 600,
+				"post_it_text" : "Working for 10"
+				"speech_bubble": "Block2"
+			},
+			{
+				"length_in_secs" : 780,
+				"post_it_text" : "Working for 13"
+				"speech_bubble": "Block3"
+			},
+			{
+				"length_in_secs" : 900,
+				"post_it_text" : "Working for 15"
+				"speech_bubble": "Block4"
+			},
+						{
+				"length_in_secs" : 900,
+				"post_it_text" : "Working for 15, 2nd time"
+				"speech_bubble": "Block5"
+			},
+			{
+				"length_in_secs" : 1800,
+				"post_it_text" : "Working for 30!"
+				"speech_bubble": "Block6"
+			},
+			{
+				"length_in_secs" : 1500,
+				"post_it_text" : "Block7"
+				"speech_bubble": "Last work block."
+			},
+			{
+				"length_in_secs" : 1500,
+				"post_it_text" : "Working for 25 again."
+				"speech_bubble": "Block8"
+			},
+			{
+				"length_in_secs" : 1800,
+				"post_it_text" : "Working for 30 (2)"
+				"speech_bubble": "Block9"
+			},
+			{
+				"length_in_secs" : 1800,
+				"post_it_text" : "Last one! Working for 30!"
+				"speech_bubble": "Block10"
+			},
+
+		]
+	"breakEvent" :
+		[
+			{
+				"length_in_secs" : 300,
+				"post_it_text" : "Break #1"
+				"speech_bubble": "Have to go potty."
+			},
+			{
+				"length_in_secs" : 300,
+				"post_it_text" : "Break #2"
+				"speech_bubble": "Going to walk around."
+			},
+			{
+				"length_in_secs" : 300,
+				"post_it_text" : "Break #3"
+				"speech_bubble": "Let's jog!"
+			},
+			{
+				"length_in_secs" : 300,
+				"post_it_text" : "Break #4"
+				"speech_bubble": "Almost done!"
+			}
+						{
+				"length_in_secs" : 300,
+				"post_it_text" : "Break #5"
+				"speech_bubble": "Have to go potty."
+			},
+			{
+				"length_in_secs" : 300,
+				"post_it_text" : "Break #6"
+				"speech_bubble": "Going to walk around."
+			},
+			{
+				"length_in_secs" : 300,
+				"post_it_text" : "Break #7"
+				"speech_bubble": "Let's jog!"
+			},
+			{
+				"length_in_secs" : 300,
+				"post_it_text" : "Break #8"
+				"speech_bubble": "Almost done!"
+			}
+			{
+				"length_in_secs" : 300,
+				"post_it_text" : "Break #9"
+				"speech_bubble": "Have to go potty."
+			},
+			{
+				"length_in_secs" : 300,
+				"post_it_text" : "Break #10"
+				"speech_bubble": "Going to walk around."
+			},
+		]
+}
