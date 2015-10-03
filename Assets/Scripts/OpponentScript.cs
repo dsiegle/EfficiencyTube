@@ -34,7 +34,7 @@ public class OpponentScript : MonoBehaviour {
 	Hashtable _op;			// Contains the opponent information from the JSON file.
 	int _curIndex =  0;		// Current index into opponents work/break blocks
 	int _numWorkBlocks = 0;	// Number of work blocks in the opponents day
-	bool _working = true;	// Indicates if opponent is working or on break.
+	private bool _working = true;	// Indicates if opponent is working or on break.
 	bool _doneForDay = false;
 
 	TimeSpan _workTotal;	// Total time worked
@@ -105,11 +105,6 @@ public class OpponentScript : MonoBehaviour {
 	{
 		return (float)_workTotal.TotalSeconds;
 	}
-	//------------------------------------------------------------
-	public bool IsWorking()
-	{
-		return _working;
-	}
 
 	//------------------------------------------------------------
 	void UpdatePostItNote(ArrayList list, DateTime now)
@@ -151,6 +146,10 @@ public class OpponentScript : MonoBehaviour {
 //		string s = (string)((Hashtable)(list[_curIndex])) ["post_it_text"];
 //		return s;
 //	}
+
+	public bool IsWorking() {
+		return _working;
+	}
 
 	//------------------------------------------------------------
 	void DisplayFinalMetrics()

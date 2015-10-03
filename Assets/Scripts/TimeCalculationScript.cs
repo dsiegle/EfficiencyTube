@@ -84,6 +84,7 @@ public class TimeCalculationScript : MonoBehaviour {
 		Debug.Log ("TCS:InitializeAndRun() called");
 		workSpan = sliderTime;
 		startTime = System.DateTime.Now;
+		currentTime = System.DateTime.Now;
 
 		// The "Start Work!" button has been clicked and we are measuring.
 		started = true;
