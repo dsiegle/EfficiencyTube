@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 using System;
+
+// Attached to "TargetTimePanel" GameObject on the startScreen level.
 
 public class TargetTimePanelScript2 : MonoBehaviour {
 
@@ -18,7 +19,6 @@ public class TargetTimePanelScript2 : MonoBehaviour {
 		TimeCalculationScript.tcs.InitializeAndRun (ts);
 
 		Application.LoadLevel (1);
-
 	}
 	
 	//------------------------------------------------------------------------------------------
@@ -30,24 +30,14 @@ public class TargetTimePanelScript2 : MonoBehaviour {
 
 		// Each unit on the slider is 15 minutes.
 		TimeSpan ts = new TimeSpan (0, (int)(s.value * 15), 0);
-		t.text = ts.ToString ();
-
-		// return string.Format ("{0:d2}:{1:d2}:{2:d2}", h, m, s);
-		//t.text = TimeCalculationScript.tcs.toHMS (s.value);
-		//t.text = to.toHMS (s.value * 60 * 15);
-		//Debug.Log ("TTP2:Start() called");
+		t.text = string.Format ("{0:d2}:{1:d2}", ts.Hours, ts.Minutes);
 	}
 	
 	//------------------------------------------------------------------------------------------
 	// Update is called once per frame
 	void Update () 
 	{
-		//Debug.Log ("TTP2:Update() called");
-
-		//t.text = to.toHMS (s.value);
 		TimeSpan ts = new TimeSpan (0, (int)(s.value * 15), 0);
-		t.text = ts.ToString ();
-
-		//t.text = TimeCalculationScript.tcs.toHMS (s.value * 60 * 15);
+		t.text = string.Format ("{0:d2}:{1:d2}", ts.Hours, ts.Minutes);
 	}
 }
