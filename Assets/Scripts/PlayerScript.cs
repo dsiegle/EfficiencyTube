@@ -13,13 +13,13 @@ public class PlayerScript : MonoBehaviour {
 	//public Image postItNote;
 
 	// These are the external GameObjects we update via this script.
-	public Text sessionTime;
-	public Text numSes;
-	public Text avgSes;
-	public Text numBreaks; 	// Display the number of breaks
-	public Text avgBreak;	// Display average time of all breaks
-	public Text breakTime;	// Display length of current break
-	public Text totalTime;
+	private Text sessionTime;
+	private Text numSes;
+	private Text avgSes;
+	private Text numBreaks; 	// Display the number of breaks
+	private Text avgBreak;	// Display average time of all breaks
+	private Text breakTime;	// Display length of current break
+	private Text totalTime;
 
 	int numberOfBreaks = 0;
 	
