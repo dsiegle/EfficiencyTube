@@ -8,15 +8,18 @@ using System.Collections.Generic;
 using Procurios.Public;
 
 
+// Attached to the OPBizCard GameObject
+// This script is also responsible for updating the OP_PostItNote contents.
+
 public class OpponentScript : MonoBehaviour {
 
 	public static OpponentScript opponentScript;
 	private PostItScript pis;
 
 	// These are the external GameObjects we update via this script.
-	public Text op_name;
-	public Text op_company;
-	public Text op_position;
+	private Text op_name;
+	private Text op_company;
+	private Text op_position;
 	public Text op_sessionTime;
 	public Text op_quote;
 	public Text op_numSes;

@@ -10,7 +10,7 @@ public class PostItScript : MonoBehaviour {
 	public Button op_postItNote;
 
 	private Vector3 vPlayer = new Vector3 (206, -361, -5);		// Players Post it note hidden position
-	private Vector3 vOpponent = new Vector3 (-111, -393, 30);	// Opponents Post it note hidden position
+	private Vector3 vOpponent = new Vector3 (-124, -362, -5);	// Opponents Post it note hidden position
 
 	bool _showPlayer = false;
 	bool _showOpponent = false;
@@ -63,9 +63,9 @@ public class PostItScript : MonoBehaviour {
 	//------------------------------------------------------------
 	public void ShowOpponentPostIt(bool value) {
 		if (value == true) {
-			vOpponent.z = 0;
+			vOpponent.z = -20;
 		} else {
-			vOpponent.z = 30;
+			vOpponent.z = -5;
 		}
 		op_postItNote.transform.position = vOpponent; // Move post-it note into or out of view
 		_showOpponent = value;
