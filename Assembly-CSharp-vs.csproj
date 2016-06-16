@@ -66,6 +66,7 @@
      <Compile Include="Assets\Scripts\PositionTimeTextScript.cs" />
      <Compile Include="Assets\Scripts\PostItScript.cs" />
      <Compile Include="Assets\Scripts\SortingOrderScript.cs" />
+     <Compile Include="Assets\Scripts\SpeechBubbleScript.cs" />
      <Compile Include="Assets\Scripts\TargetTimePanelScript2.cs" />
      <Compile Include="Assets\Scripts\TgtAvgScript.cs" />
      <Compile Include="Assets\Scripts\TgtFinishTimeScript.cs" />
@@ -79,6 +80,7 @@
      <Compile Include="Assets\Scripts\WaterPipeAnimation.cs" />
      <Compile Include="Assets\Scripts\WorkBarScript.cs" />
      <None Include="Assets\Data\opponent_config.txt" />
+     <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>F:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
@@ -91,6 +93,10 @@
  <Reference Include="UnityEditor.iOS.Extensions.Xcode">
  <HintPath>F:/Program Files/Unity/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
  </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass-vs.csproj">
+      <Project>{4CBCCF73-1D2D-0E51-1D24-CA331E860765}</Project>      <Name>Assembly-CSharp-firstpass-vs</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

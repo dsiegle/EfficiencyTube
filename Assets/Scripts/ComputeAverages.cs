@@ -58,6 +58,7 @@ public class ComputeAverages : MonoBehaviour {
 		} 
 		else // Past the end of the normal day, i.e. into overtime.
 		{	
+			// TODO: In here is where you can display the final efficiency score
 			efficiency = (rt) / (rt + seoot) * 100;
 			//Debug.Log ("OVERTIME: efficiency = " + efficiency);
 			// No longer update the maxEfficiency value.

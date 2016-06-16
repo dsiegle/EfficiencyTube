@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
 
 // Attached to "TargetTimePanel" GameObject on the startScreen level.
 
@@ -18,7 +19,7 @@ public class TargetTimePanelScript2 : MonoBehaviour {
 		TimeSpan ts = new TimeSpan(0,(int)(s.value*15),0);
 		TimeCalculationScript.tcs.InitializeAndRun (ts);
 
-		Application.LoadLevel (1);
+		SceneManager.LoadScene (1);
 	}
 	
 	//------------------------------------------------------------------------------------------

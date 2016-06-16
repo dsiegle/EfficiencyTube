@@ -11,11 +11,12 @@ public class TimeCalculationScript : MonoBehaviour {
 
 	public static TimeCalculationScript tcs;
 
-	public DateTime startTime;			// When the app was started
-	public DateTime currentTime;		// Latest time.
-	public DateTime endTime;			// When our workday ends
-	public DateTime endOverTime;		// Time to hit 100% in overtime
-	public DateTime endTgtTime;			// Time when our Tgt marker will be hit
+	// TODO: Improve the naming of these variables.
+	public DateTime startTime;			// When the app was started		"times.start"
+	public DateTime currentTime;		// Latest time.					"times.current"
+	public DateTime endTime;			// When our workday ends		"times.endWorkday"
+	public DateTime endOverTime;		// Time to hit 100% in overtime	"times.endOverTime"
+	public DateTime endTgtTime;			// Time when our Tgt marker will be hit	"times.targetHit"
 
 	public float secSinceStartup;
 	public float secToEOD;				// # Seconds until the workday is over
@@ -29,21 +30,21 @@ public class TimeCalculationScript : MonoBehaviour {
 	public TimeSpan runSpan;			// How long we've been running
 
 	public float runSec;
-	private Text startButtonText;
+	private Text text;
 
 	public void StartStop()
 	{
 		if (running) { // Going from running to stop 
 			Debug.Log ("TCS.StartStop() state stop");
 			PlayerScript.playerScript.stopSession();
-			startButtonText = GameObject.Find ("StartButtonText").GetComponent<Text> ();
-			startButtonText.text = "Click here to continue work";
+			text = GameObject.Find ("StartStopButtonText").GetComponent<Text> ();
+			text.text = "On break.";
 
 		} else {		// Going from stop to start
 			Debug.Log ("TCS.StartStop() state running");
 			PlayerScript.playerScript.startSession();
-			startButtonText = GameObject.Find ("StartButtonText").GetComponent<Text> ();
-			startButtonText.text = "Click here to take a break.";
+			text = GameObject.Find ("StartStopButtonText").GetComponent<Text> ();
+			text.text = "Working.";
 		}
 		running = !running;		// Toggle the running flag
 	}

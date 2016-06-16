@@ -20,7 +20,9 @@ public class TgtFinishTimeScript : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
+	// TODO: This thing should update with a single call to the Times object.
 	void Update () {
+		// tgtFinishTime.text = times.FinishTimeAsString();
 		float secFromStartOfDayToSlider = to.workLengthSec * slider.value / 100.0f;
 		float secsToTgt = secFromStartOfDayToSlider - to.runSec;
 		TimeSpan ts = new TimeSpan(0,0,(int)(secsToTgt));
