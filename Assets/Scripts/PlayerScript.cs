@@ -9,8 +9,6 @@ using System.Collections.Generic;
 public class PlayerScript : MonoBehaviour {
 
 	public static PlayerScript playerScript;
-	private PostItScript pis;
-	//public Image postItNote;
 
 	// These are the external GameObjects we update via this script.
 	private Text sessionTime;
@@ -51,7 +49,6 @@ public class PlayerScript : MonoBehaviour {
 	//------------------------------------------------------------
 	void Start() {
 		to = TimeCalculationScript.tcs;	// Get our static time information
-		pis = PostItScript.pis;	// Get our static PostItScript object
 
 		// Get all of the GameObjects we will be updating
 		sessionTime = GameObject.Find ("SessionTime").GetComponent<Text>();
@@ -75,7 +72,7 @@ public class PlayerScript : MonoBehaviour {
 	// This only gets called *after* the user clicks to take a break.
 	public void startSession() {
 		startDT = System.DateTime.Now;
-		//Debug.Log ("PS.Starting session #" + sessions.Count + " @ " + startDT);
+		Debug.Log ("PS.Starting session #" + sessions.Count + " @ " + startDT);
 
 		// Since we start the day working, we count the current session among the number of sessions.
 		numSes.text = string.Format ("Session #: {0:d2}", sessions.Count+1);
@@ -86,7 +83,6 @@ public class PlayerScript : MonoBehaviour {
 			totalBreakTime += breakTS;
 		}
 
-		pis.ShowPostIt (false);
 	}
 
 	//------------------------------------------------------------
@@ -102,8 +98,6 @@ public class PlayerScript : MonoBehaviour {
 
 		// Set the start of break time.
 		startBreakDT = System.DateTime.Now;
-
-		pis.ShowPostIt (true);
 	}
 	
 	//------------------------------------------------------------
