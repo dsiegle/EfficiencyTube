@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class OpenResultsLevel : MonoBehaviour {
 
 	public void DoResults()
 	{
-		Application.LoadLevel (2);
+		SceneManager.LoadScene(2);
 	}
 }
