@@ -67,7 +67,6 @@
      <Compile Include="Assets\Scripts\TimeCalculationScript.cs" />
      <Compile Include="Assets\Scripts\TimeEODScript.cs" />
      <Compile Include="Assets\Scripts\TimeRunEODScript.cs" />
-     <Compile Include="Assets\Scripts\TimeTextScript.cs" />
      <Compile Include="Assets\Scripts\UpdateStartTime.cs" />
      <Compile Include="Assets\Scripts\WaterFillScript.cs" />
      <Compile Include="Assets\Scripts\WaterPipeAnimation.cs" />

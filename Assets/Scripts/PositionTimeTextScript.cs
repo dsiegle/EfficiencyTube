@@ -5,34 +5,30 @@ using System;
 
 public class PositionTimeTextScript : MonoBehaviour {
 	
-	private float guiMinY;
-	private float guiMaxY;
-	private float guiDelta;
-	private TimeCalculationScript to;
-	
-	void Start ()
-	{
-		//Debug.Log ("OPTotalTimeScript.Start() called");
-		to = TimeCalculationScript.tcs;
+	private const float guiMinY = -330;
+	private const float guiMaxY = 310;
+	private const float guiDelta = guiMaxY - guiMinY;
+    private const int x = -155;
 
-		guiMinY = -283;
-		guiMaxY = 355;
-		guiDelta = guiMaxY - guiMinY;
-		transform.localPosition = new Vector3 (-37, guiMinY, 0);
-		
-		// Position the time markers on the beaker based upon how long the day is.
-		//float eod = guiMinY + (to.workSpan.TotalSeconds / 36000 * guiDelta);
-		//float eod = guiMinY + guiDelta;
-		//Debug.Log ("eod = " + eod);
+    private TimeCalculationScript to;
+    private Text timeText;
+
+    void Start ()
+	{
+		to = TimeCalculationScript.tcs;
+        timeText = GetComponent<Text>();
+        //guiMinY = -330;
+		//guiMaxY = 310;
+		//guiDelta = guiMaxY - guiMinY;
+		transform.localPosition = new Vector3 (x, guiMinY, 0);	
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
 		// Position the 'water' within the beaker
-		float pos = guiMinY + (to.runSec/(float)to.workSpan.TotalSeconds * guiDelta);
-		//Debug.Log ("OPTotalTimeScript.Update() to.runSec = " + to.runSec + " to.workSpan.TotalSeconds = " + to.workSpan.TotalSeconds);
-		transform.localPosition = new Vector3(-37, pos, 0);
-		
-	}
+		float y = guiMinY + (to.runSec/(float)to.workSpan.TotalSeconds * guiDelta);
+		transform.localPosition = new Vector3(x, y, 0);
+        timeText.text = to.runSpan.ToString();
+    }
 }
