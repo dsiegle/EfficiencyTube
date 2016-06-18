@@ -31,20 +31,21 @@ public class TimeCalculationScript : MonoBehaviour {
 
 	public float runSec;
 	private Text text;
+    private Image buttonColor;
 
 	public void StartStop()
 	{
-		if (running) { // Going from running to stop 
+        buttonColor = GameObject.Find("StartStopButton").GetComponent<Image>();
+
+        if (running) { // Going from running to stop 
 			Debug.Log ("TCS.StartStop() state stop");
 			PlayerScript.playerScript.stopSession();
-			text = GameObject.Find ("StartStopButtonText").GetComponent<Text> ();
-			text.text = "On break.";
+            buttonColor.color = Color.red;
 
 		} else {		// Going from stop to start
 			Debug.Log ("TCS.StartStop() state running");
 			PlayerScript.playerScript.startSession();
-			text = GameObject.Find ("StartStopButtonText").GetComponent<Text> ();
-			text.text = "Working.";
+            buttonColor.color = Color.green;
 		}
 		running = !running;		// Toggle the running flag
 	}
