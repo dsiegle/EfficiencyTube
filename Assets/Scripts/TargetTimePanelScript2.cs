@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class TargetTimePanelScript2 : MonoBehaviour {
 
 	private Text t;
-	private Slider s;
+	public Slider s;
     private const int sliderUnitInMinutes = 1;
 	//------------------------------------------------------------------------------------------
 	// Gets called when the user selects how long they will work.  Starts timer as a side effect.

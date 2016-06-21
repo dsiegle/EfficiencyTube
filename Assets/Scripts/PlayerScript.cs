@@ -14,12 +14,13 @@ public class PlayerScript : MonoBehaviour {
 	private Text sessionTime;
 	private Text numSes;
 	private Text avgSes;
-	private Text numBreaks; 	// Display the number of breaks
+    private Text totalTimeAtBottomText;
+    private Text numBreaks; 	// Display the number of breaks
 	private Text avgBreak;	// Display average time of all breaks
 	private Text breakTime;	// Display length of current break
-	private Text totalTime;
+    private Text totalBreakTimeText;
 
-	int numberOfBreaks = 0;
+    int numberOfBreaks = 0;
 	
 	// Our lists of sessions and breaks (which are simply TimeSpans)
 	public List<TimeSpan> sessions = new List<TimeSpan>();
@@ -54,18 +55,18 @@ public class PlayerScript : MonoBehaviour {
 		sessionTime = GameObject.Find ("SessionTime").GetComponent<Text>();
 		numSes = GameObject.Find ("NumSes").GetComponent<Text>();
 		avgSes = GameObject.Find ("AvgSes").GetComponent<Text>();
-		numBreaks = GameObject.Find ("NumBreaks").GetComponent<Text>();
+        totalTimeAtBottomText = GameObject.Find("TotalTimeAtBottom").GetComponent<Text>();
+
+        numBreaks = GameObject.Find ("NumBreaks").GetComponent<Text>();
 		avgBreak = GameObject.Find ("AvgBreak").GetComponent<Text>();
 		breakTime = GameObject.Find ("BreakTime").GetComponent<Text>();
-		totalTime = GameObject.Find ("TotalTime").GetComponent<Text> ();
+		totalBreakTimeText = GameObject.Find ("TotalBreakTimeText").GetComponent<Text> ();
 
 		// Initialize this immediately because Update() updates the sessionTime string and requires this as input.
 		startDT = System.DateTime.Now;
 
 		// Initialize this since startSession() isn't called until the first time the user clicks for a break.
 		numSes.text = string.Format ("Session #: {0:d2}", sessions.Count+1);
-
-
 	}
 
 	//------------------------------------------------------------
@@ -111,12 +112,15 @@ public class PlayerScript : MonoBehaviour {
 			// Update the time for this session.
 			sessionTime.text = string.Format ("Ses. Time: {0:d2}:{1:d2}:{2:d2}", sessionTS.Hours, sessionTS.Minutes, sessionTS.Seconds);
 
-			// We update the session averages every frame.
-			float avg = to.runSec / (sessions.Count + 1);
+            // We update the session averages every frame.
+            float avg = to.runSec / (sessions.Count + 1);
 			TimeSpan ts = new TimeSpan (0, 0, (int)(avg));
 			avgSes.text = string.Format ("Avg/Ses.: {0:d2}:{1:d2}:{2:d2}", ts.Hours, ts.Minutes, ts.Seconds);
 
-		} else {	// The app is NOT running
+            totalTimeAtBottomText.text = "Total Time:" + to.runSpan.ToString();
+
+        }
+        else {	// The app is NOT running
 			// In here is where we dynamically update the break information.
 			// We will be updating the avgBreak GameObject value.
 			breakTS = now - startBreakDT;
@@ -124,7 +128,7 @@ public class PlayerScript : MonoBehaviour {
 
 			// Total time for all breaks here.
 			TimeSpan ts2 = totalBreakTime + breakTS;	 	// Add the length of current break
-			totalTime.text = string.Format ("Total: {0:d2}:{1:d2}:{2:d2}", ts2.Hours, ts2.Minutes, ts2.Seconds);
+			totalBreakTimeText.text = string.Format ("Total: {0:d2}:{1:d2}:{2:d2}", ts2.Hours, ts2.Minutes, ts2.Seconds);
 
 			int avgSecEachBreak = (int)(ts2.TotalSeconds / (breaks.Count+1));
 			//Debug.Log ("PS.Update(): ts2=" + ts2 + " avgSecEachBreak=" + avgSecEachBreak);
